@@ -175,6 +175,16 @@ abstract class Webserver
     }
 
     /**
+     * Get the address or path where to pass requests to FPM
+     *
+     * @return  string
+     */
+    public function getFpmUri()
+    {
+        return $this->fpmUri;
+    }
+
+    /**
      * Set the address or path where to pass requests to FPM
      *
      * @param   string  $uri
@@ -184,16 +194,7 @@ abstract class Webserver
     public function setFpmUri($uri)
     {
         $this->fpmUri = (string) $uri;
-        return $this;
-    }
 
-    /**
-     * Get the address or path where to pass requests to FPM
-     *
-     * @return  string
-     */
-    public function getFpmUri()
-    {
-        return $this->fpmUri;
+        return $this;
     }
 }
