@@ -33,6 +33,13 @@ abstract class Webserver
     protected $configDir;
 
     /**
+     * Path to the PHP fastCGI socket
+     *
+     * @var string
+     */
+    protected $fpmSocketPath = '/var/run/php5-fpm.sock';
+
+    /**
      * Create instance by type name
      *
      * @param   string $type
@@ -63,11 +70,13 @@ abstract class Webserver
             '{urlPath}',
             '{documentRoot}',
             '{configDir}',
+            '{fpmSocketPath}'
         );
         $replaceTokens = array(
             $this->getUrlPath(),
             $this->getDocumentRoot(),
-            $this->getConfigDir()
+            $this->getConfigDir(),
+            $this->getFpmSocketPath()
         );
         $template = str_replace($searchTokens, $replaceTokens, $template);
         return $template;
@@ -163,5 +172,28 @@ abstract class Webserver
             return Icinga::app()->getConfigDir();
         }
         return $this->configDir;
+    }
+
+    /**
+     * Set the path to the PHP fastCGI socket
+     *
+     * @param   string  $path
+     *
+     * @return  $this
+     */
+    public function setFpmSocketPath($path)
+    {
+        $this->fpmSocketPath = (string) $path;
+        return $this;
+    }
+
+    /**
+     * Get the path to the PHP fastCGI socket
+     *
+     * @return  string
+     */
+    public function getFpmSocketPath()
+    {
+        return $this->fpmSocketPath;
     }
 }
