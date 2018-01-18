@@ -33,11 +33,11 @@ abstract class Webserver
     protected $configDir;
 
     /**
-     * Path to the PHP fastCGI socket
+     * Address or path where to pass requests to FPM
      *
      * @var string
      */
-    protected $fpmSocketPath = '/var/run/php5-fpm.sock';
+    protected $fpmUri;
 
     /**
      * Create instance by type name
@@ -70,13 +70,13 @@ abstract class Webserver
             '{urlPath}',
             '{documentRoot}',
             '{configDir}',
-            '{fpmSocketPath}'
+            '{fpmUri}'
         );
         $replaceTokens = array(
             $this->getUrlPath(),
             $this->getDocumentRoot(),
             $this->getConfigDir(),
-            $this->getFpmSocketPath()
+            $this->getFpmUri()
         );
         $template = str_replace($searchTokens, $replaceTokens, $template);
         return $template;
@@ -175,25 +175,25 @@ abstract class Webserver
     }
 
     /**
-     * Set the path to the PHP fastCGI socket
+     * Set the address or path where to pass requests to FPM
      *
-     * @param   string  $path
+     * @param   string  $uri
      *
      * @return  $this
      */
-    public function setFpmSocketPath($path)
+    public function setFpmUri($uri)
     {
-        $this->fpmSocketPath = (string) $path;
+        $this->fpmUri = (string) $uri;
         return $this;
     }
 
     /**
-     * Get the path to the PHP fastCGI socket
+     * Get the address or path where to pass requests to FPM
      *
      * @return  string
      */
-    public function getFpmSocketPath()
+    public function getFpmUri()
     {
-        return $this->fpmSocketPath;
+        return $this->fpmUri;
     }
 }

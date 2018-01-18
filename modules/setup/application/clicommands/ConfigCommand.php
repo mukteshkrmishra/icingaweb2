@@ -99,7 +99,7 @@ class ConfigCommand extends Command
      *  --root|--document-root=<directory>  The directory from which the webserver will serve files
      *                                      [/path/to/icingaweb2/public]
      *
-     *  --fpm-sock=<path>                   Path to the PHP fastCGI socket [/var/run/php5-fpm.sock]
+     *  --fpm-uri=<uri>                     Address or path where to pass requests to FPM [127.0.0.1:9000]
      *
      *  --config=<directory>                Path to Icinga Web 2's configuration files [/etc/icingaweb2]
      *
@@ -119,7 +119,7 @@ class ConfigCommand extends Command
      *
      *  icingacli setup config webserver nginx \
      *    --root=/usr/share/icingaweb2/public \
-     *    --fpm-sock=/var/run/php/php7.0-fpm.sock
+     *    --fpm-uri=unix:/var/run/php5-fpm.sock
      */
     public function webserverAction()
     {
@@ -149,17 +149,17 @@ class ConfigCommand extends Command
                 'The argument --config expects a path to Icinga Web 2\'s configuration files'
             ));
         }
-        $fpmSocketPath = trim($this->params->get('fpm-sock', $webserver->getFpmSocketPath()));
-        if (empty($fpmSocketPath)) {
+        $fpmUri = trim($this->params->get('fpm-uri', $webserver->getFpmUri()));
+        if (empty($fpmUri)) {
             $this->fail($this->translate(
-                'The argument --fpm-sock expects a path to the PHP fastCGI socket'
+                'The argument --fpm-uri expects an address or path where to pass requests to FPM'
             ));
         }
         $webserver
-            ->setFpmSocketPath($fpmSocketPath)
             ->setDocumentRoot($documentRoot)
             ->setConfigDir($configDir)
-            ->setUrlPath($urlPath);
+            ->setUrlPath($urlPath)
+            ->setFpmUri($fpmUri);
         $config = $webserver->generate() . "\n";
         if (($file = $this->params->get('file')) !== null) {
             if (file_exists($file) === true) {
